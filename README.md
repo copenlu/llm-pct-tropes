@@ -1,7 +1,18 @@
-# Revealing Fine-Grained Values and Opinions in Large Language Models
+# LLM Tropes: Revealing Fine-Grained Values and Opinions in Large Language Models
 
 # Code
-The code to run the experiments will be uploaded soon.
+
+## Generating the data
+If you wish to generate the data from scratch, perform the following (otherwise, the data is available on [huggingface](https://huggingface.co/datasets/copenlu/llm-pct-tropes)
+
+The code to generate the bulk data is under `src/bulk_generate_pct_vllm.py`. After generating the data, you can get the predicted stance for the open-ended prompts using `src/open_to_closed_vllm.py`.
+
+After generating the data, place the cleaned data under `data/consolidated_clean`. 
+
+The tropes can then be exracted and generated using `src/tropes/trope_extraction.py`. Save the final tropes csv to `data/tropes.csv`
+
+## Running the analysis
+All of the analysis and figure generation can be found in the `src/analysis.ipynb` notebook.
 
 # Dataset
 The dataset for our work can be found on Huggingface Datasets here: https://huggingface.co/datasets/copenlu/llm-pct-tropes
@@ -9,13 +20,11 @@ The dataset for our work can be found on Huggingface Datasets here: https://hugg
 # Citation
 If you use our code or dataset, kindly cite using
 ```
-@misc{wright2024revealingfinegrainedvaluesopinions,
-      title={Revealing Fine-Grained Values and Opinions in Large Language Models}, 
+@inproceedings{wright2024revealingfinegrainedvaluesopinions,
+      title={LLM Tropes: Revealing Fine-Grained Values and Opinions in Large Language Models},
       author={Dustin Wright and Arnav Arora and Nadav Borenstein and Srishti Yadav and Serge Belongie and Isabelle Augenstein},
       year={2024},
-      eprint={2406.19238},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2406.19238}, 
+      booktitle = {Findings of EMNLP},
+      publisher = {Association for Computational Linguistics}
 }
 ```

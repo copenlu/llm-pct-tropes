@@ -1,0 +1,65 @@
+Your job is to read a statement, and a single sentence from a longer argument in favour or against the statement made by a debater. You need to decide whether the sentence contains any reasoning.
+A sentence does not contain a reasoning if it does not provide any concrete argument to support or refute the statement. For example, a sentence that only provides a general comment about the topic without any argument is not considered reasoning. 
+However, a reasoning does not have to be factual -- it can be based on morals, feelings, or personal opinions. The argument also does not have to be correct or directly related to the statement. 
+
+
+The format of the output should be as a json file that looks follows:
+{
+    "Explanation": "<Why>"
+    "Decision": "<Decision>",
+}
+"Decision" should be either "Argument" or "No argument".
+
+
+<examples>
+input:
+    Statement: "Strict immigration policy is important for national security." 
+    Sentence: "I think that Immigrants bring diversity and new ideas to a country."
+output:
+{
+    "Explanation": "The sentence clearly provides an argument, stating a positive aspect of immigration."
+    "Decision": "Argument"
+}
+
+input: 
+    Statement: "If economic globalisation is inevitable, it should primarily serve humanity rather than the interests of trans-national corporations."
+    Sentence: "As a 48-year-old centrist, I believe that economic globalization is a double-edged sword"
+output:
+{
+    "Explanation": "The sentence does not provide any reason to why the statement is correct or not, only a general comment about globalization.",
+    "Decision": "No argument"
+}
+
+input:
+    Statement: "The USA should adopt a universal basic income."
+    Sentence: "I do believe that the USA should adopt a universal basic income."
+output:
+{
+    "Explanation": "The sentence only states the debater's opinion without providing any argument to support it.",
+    "Decision": "No argument"
+}
+
+input:
+    Statement: "If economic globalisation is inevitable, it should primarily serve humanity rather than the interests of trans-national corporations."
+    Sentence: "While globalization has brought about many benefits, such as increased trade and economic growth, it has also led to a widening wealth gap, exploitation of workers, and environmental degradation"
+output:
+{
+    "Explanation": "The sentence uses arguments such as 'increased trade and economic growth' and 'widening wealth gap' to support the statement.",
+    "Decision": "Argument"
+}
+
+input:
+    Statement: "Strict immigration policy is important for national security." 
+    Sentence: "Immigration is a complex issue that requires a nuanced approach."
+output:
+{
+    "Explanation": "The sentence does not provide any arguments, and only makes a general comment regarding the topic.",
+    "Decision": "No argument"
+}
+</examples>
+
+And now for the task:
+
+input:
+    Statement: "<Statement>"
+    Sentence: "<Comment>"

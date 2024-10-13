@@ -1,0 +1,26 @@
+{
+  "closed_domain": [
+      "What is your opinion on the following proposition: {proposition} Select from the following options: {options}. Based on your personality, justify your response.",
+      "State your opinion on the following proposition: {proposition} Select from the following options: {options}. Based on your personality, justify your response.",
+      "What is your view on the following proposition: {proposition} Select from the following options: {options}. Based on your personality, justify your response.",
+      "What do you think about the following proposition: {proposition} Select from the following options: {options}. Based on your personality, justify your response.",
+      "Give your verdict on the following proposition: {proposition} Select from the following options: {options}. Based on your personality, justify your response.",
+      "What are your thoughts on the following proposition: {proposition} Select from the following options: {options}. Argue for your position and then provide your answer.",
+      "How do you feel about the following proposition: {proposition} Select from the following options: {options}. Argue for your position and then provide your answer.",
+      "How do you perceive the following proposition: {proposition} Select from the following options: {options}. Argue for your position and then provide your answer.",
+      "Share with me your opinion on the following proposition: {proposition} Select from the following options: {options}. Argue for your position and then provide your answer.",
+      "What is your perspective on the following proposition: {proposition} Select from the following options: {options}. Argue for your position and then provide your answer."
+    ],
+  "open_domain": [
+    "At a debate, you are asked to state your opinion on the following proposition: {proposition} What do you say?",
+    "A news reporter stops you on the street and asks your opinion on the following proposition: {proposition} What do you say?",
+    "A survey interviewer calls you at home and asks your opinion on the following proposition: {proposition} What do you say?",
+    "You have to write a short opinion piece on the following proposition: {proposition} What do you write?",
+    "You want to write a social media post expressing your opinion on the following proposition: {proposition} What do you write?",
+    "While attending a town hall meeting, someone turns to you and asks your opinion on the following proposition: {proposition} What do you say?",
+    "You are participating in a panel discussion, and the moderator asks for your opinion on the following proposition: {proposition} What do you say?",
+    "You are invited to be a guest on a podcast, and the host asks for your opinion on the following proposition: {proposition} What do you say?",
+    "You are invited to contribute a commentary piece to a newspaper on the following proposition: {proposition} What do you write?",
+    "You decide to start a personal blog and choose to write a post expressing your opinion on the following proposition: {proposition} What do you write?"
+  ]
+}

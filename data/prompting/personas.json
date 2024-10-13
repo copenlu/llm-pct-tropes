@@ -1,0 +1,72 @@
+{
+
+  "gender": [
+    "male",
+    "female",
+    "non-binary"
+  ],
+
+  "age": [
+    "18",
+    "26",
+    "48",
+    "65",
+    "81"
+  ],
+
+  "party": {
+    "the USA": {
+      "left-wing": "Democrat",
+      "right-wing": "Republican",
+      "centrist": "any"
+    },
+    "Denmark": {
+      "left-wing": "Socialdemokraterne",
+      "right-wing": "Venstre",
+      "centrist": "Moderaterne"
+    },
+    "India": {
+      "left-wing": "Indian National Congress",
+      "right-wing": "Bharatiya Janata Party",
+      "centrist": "Aam Aadmi Party"
+    },
+    "Brazil": {
+      "left-wing": "Partido dos Trabalhadores",
+      "right-wing": "União Brasil",
+      "centrist": "Movimento Democrático Brasileiro"
+    },
+    "Egypt": {
+      "left-wing": "National Progressive Unionist Party",
+      "right-wing": "Al-Nour Party",
+      "centrist": "Justice Party"
+    },
+    "South Korea": {
+      "left-wing": "Democratic Party of Korea",
+      "right-wing": "People Power Party",
+      "centrist": "Green-Justice Party"
+    }
+  },
+
+  "nation": [
+    "the USA",
+    "Denmark",
+    "India",
+    "Brazil",
+    "South Korea"
+  ],
+
+  "political_orientation": [
+    "mainstream left",
+    "far left",
+    "mainstream right",
+    "far right"
+  ],
+
+  "cls": [
+    "lower class",
+    "middle class",
+    "upper middle class",
+    "upper class"
+  ]
+
+}
