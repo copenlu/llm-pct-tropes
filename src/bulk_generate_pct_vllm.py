@@ -61,6 +61,7 @@ if __name__ == '__main__':
                         choices=['meta-llama/Llama-2-13b-chat-hf', 'mistralai/Mixtral-8x7B-Instruct-v0.1', 'mistralai/Mistral-7B-Instruct-v0.2', 'google/gemma-7b-it', 'HuggingFaceH4/zephyr-7b-beta', 'allenai/OLMo-7B-Instruct', 'meta-llama/Meta-Llama-3-8B-Instruct'])
     parser.add_argument("--seed", type=int, help="Random seed", default=1000)
     parser.add_argument("--random_samples", type=int, help="Specify a set number of random prompts to use", default=-1)
+    parser.add_argument("--base_case", action="store_true", help="Generate for the base case (i.e. no demographics)")
 
 
     args = parser.parse_args()
@@ -102,33 +103,65 @@ if __name__ == '__main__':
         os.makedirs(f"{output_dir}/success")
     if not os.path.exists(f"{output_dir}/fail"):
         os.makedirs(f"{output_dir}/fail")
-    # Load and go through the positions
-    with open(args.pct_questions_file) as f:
-        propositions = [l.strip() for l in f]
+        
+    if args.base_case:
+        with open(instructions_file) as f:
+            instructions_text = json.load(f)
+            
+        instructions = []
+        for text in instructions_text['closed_domain']:
+            instructions.append({
+                "text": text,
+                "type": "closed_domain"
+            })
+        for text in instructions_text['open_domain']:
+            instructions.append({
+                "text": text,
+                "type": "open_domain"
+            })
 
-    if args.split_file != None:
-        with open(args.split_file) as f:
-            prompts = [json.loads(l) for l in f]
+        samples = []
+        option_list = []
+        for instruction in instructions:
+            for j,proposition in enumerate(propositions):
+                prompt, options = fill_prompt_base_case(proposition=proposition, model=model_id, instruction=instruction)
+                print(prompt)
+                id_ = create_uuid_from_string(prompt)
+                if os.path.exists(f"{output_dir}/success/{id_}.txt") or os.path.exists(f"{output_dir}/fail/{id_}.txt"):
+                    # Already generated sample for this prompt
+                    continue
+                samples.append(prompt)
+                option_list.append({})
     else:
-        prompts = generate_prompts_subsample(personas_file, instructions_file, exclusion_file, n_categories=2)
+        # Load and go through the positions
+        with open(args.pct_questions_file) as f:
+            propositions = [l.strip() for l in f]
 
-    if random_samples > 0:
-        prompts = random.sample(list(prompts), random_samples)
+        if args.split_file != None:
+            with open(args.split_file) as f:
+                prompts = [json.loads(l) for l in f]
+        else:
+            prompts = generate_prompts_subsample(personas_file, instructions_file, exclusion_file, n_categories=2)
+
+        if random_samples > 0:
+            prompts = random.sample(list(prompts), random_samples)
 
 
-    samples = []
-    option_list = []
-    for i,prompt_fields in enumerate(tqdm(prompts)):
-        for j,proposition in enumerate(propositions):
-            prompt, options = fill_prompt(proposition=proposition, model=model_id, **prompt_fields)
-            print(prompt)
-            id_ = create_uuid_from_string(prompt)
-            if os.path.exists(f"{output_dir}/success/{id_}.txt") or os.path.exists(f"{output_dir}/fail/{id_}.txt"):
-                # Already generated sample for this prompt
-                continue
-            samples.append(prompt)
-            option_list.append(options)
+        samples = []
+        option_list = []
+        for i,prompt_fields in enumerate(tqdm(prompts)):
+            for j,proposition in enumerate(propositions):
+                prompt, options = fill_prompt(proposition=proposition, model=model_id, **prompt_fields)
+                print(prompt)
+                id_ = create_uuid_from_string(prompt)
+                if os.path.exists(f"{output_dir}/success/{id_}.txt") or os.path.exists(f"{output_dir}/fail/{id_}.txt"):
+                    # Already generated sample for this prompt
+                    continue
+                samples.append(prompt)
+                option_list.append(options)
 
+    
+    
     llm_answers = []
     selection_matrix = []
     finished_prompts = []
