@@ -7,7 +7,7 @@ If you wish to generate the data from scratch, perform the following (otherwise,
 
 The code to generate the bulk data is under `src/bulk_generate_pct_vllm.py`. After generating the data, you can get the predicted stance for the open-ended prompts using `src/open_to_closed_vllm.py`. This is orchestrated under `scripts/generate_data.sh` so you can simply run the following:
 
-````
+```
 $ bash scripts/generate_data.sh
 ```
 
