@@ -89,23 +89,31 @@ output:
     output:
 """
 
-def open_to_closed(model_data_id, input_path)-> None:
+def open_to_closed(model_data_id, input_dir, output_dir)-> None:
+    """"
+    Read all files in input directory, process open response through the model and write to output directory
+    model_data_id: str: Model data id
+    input_dir: str: Path to the input directory with the generated data
+    output_dir: str: Path to the output directory to write the converted data
+    """
 
-    data_dir = Path(input_path)
+    input_data_dir = Path(input_dir)
+    output_dir = Path(output_dir)
 
     model = LLM(model_code, tokenizer_mode='mistral', dtype='half', max_model_len=8096)
     sampling_params = SamplingParams(max_tokens=6000, temperature=0.2)
     
-    success_path = data_dir/model_data_id/"success"
-    new_path = Path(f"{data_dir.parent}/converted/{model_data_id}")
-    files = list(success_path.glob('*'))
+    file_path = input_data_dir/model_data_id/"success"
+    converted_path = output_dir/model_data_id
+
+    # All generated files
+    files = list(file_path.glob('*'))
     for file in files:
         file_name = file.name
         file_content = open(file, 'r').read()
+        # If file is open domain, run it through the model
         if 'open_domain' in file_content:
-
-            if (new_path/file_name).exists():
-                continue
+            converted_path_open = converted_path/"open"
             content_json = json.loads(file_content)
 
             response = content_json['response']
@@ -136,21 +144,34 @@ def open_to_closed(model_data_id, input_path)-> None:
             content_json['selection'] = ruling
             content_json['explanation'] = explanation
 
-            if not new_path.exists():
-                new_path.mkdir(parents=True)
-            if (new_path/file_name).exists():
-                print(f"Error: File already exists - {new_path/file_name}")
+            if not converted_path_open.exists():
+                converted_path_open.mkdir(parents=True)
+            if (converted_path_open/file_name).exists():
+                print(f"Error: File already exists - {converted_path_open/file_name}")
                 continue
             else:
-                with open(new_path/file_name, 'w') as f:
+                with open(converted_path_open/file_name, 'w') as f:
                     f.write(json.dumps(content_json))
+        # If the file is closed domain, just copy it to the closed domain folder
+        else:
+            converted_path_closed = converted_path/"closed"
+            if not converted_path_closed.exists():
+                converted_path_closed.mkdir(parents=True)
+            if (converted_path_closed/file_name).exists():
+                print(f"Error: File already exists - {converted_path_closed/file_name}")
+                continue
+            else:
+                with open(converted_path_closed/file_name, 'w') as f:
+                    f.write(file_content)
+
 
 if __name__ == '__main__':
     enforce_reproducibility()
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_id", type=str, help="The name of the model whose data to convert", default='meta-llama/Llama-2-13b-chat-hf',
                         choices=['meta-llama/Llama-2-13b-chat-hf', 'mistralai/Mixtral-8x7B-Instruct-v0.1', 'mistralai/Mistral-7B-Instruct-v0.2', 'HuggingFaceH4/zephyr-7b-beta', 'allenai/OLMo-7B-Instruct', 'meta-llama/Meta-Llama-3-8B-Instruct'])
-    parser.add_argument("--input_path", type=str, help="Path to the generated data", required=True)
+    parser.add_argument("--input_dir", type=str, help="Path to the generated data", required=True)
+    parser.add_argument("--output_dir", type=str, help="Path to the converted data", required=True)
 
     args = parser.parse_args()
-    open_to_closed(args.model_id, args.input_path)
+    open_to_closed(args.model_id, args.input_path, args.output_path)

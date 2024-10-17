@@ -2,7 +2,7 @@
 
 seed=1000
 base_dir=`pwd`
-output_dir=${base_dir}/data/
+data_dir=${base_dir}/data/
 
 cd src/
 
@@ -13,12 +13,13 @@ for model in 'meta-llama/Llama-2-13b-chat-hf' 'mistralai/Mixtral-8x7B-Instruct-v
         --personas_file ${base_dir}/data/prompting/personas.json \
         --instructions_file ${base_dir}/data/prompting/instructions.json \
         --pct_questions_file ${base_dir}/data/political_compass/political_compass_questions.txt \
-        --output_dir ${output_dir}/bulk \
+        --output_dir ${data_dir}/bulk \
         --model_id ${model} \
         --seed ${seed}
         
     python open_to_closed_vllm.py \
-        --input_path ${output_dir}/bulk \
+        --input_dir ${data_dir}/bulk \
+        --output_dir ${data_dir}/bulk_converted \
         --model_id ${model}
         
     # Base case
@@ -26,14 +27,24 @@ for model in 'meta-llama/Llama-2-13b-chat-hf' 'mistralai/Mixtral-8x7B-Instruct-v
         --personas_file ${base_dir}/data/prompting/personas.json \
         --instructions_file ${base_dir}/data/prompting/instructions.json \
         --pct_questions_file ${base_dir}/data/political_compass/political_compass_questions.txt \
-        --output_dir ${output_dir}/bulk_basecase \
+        --output_dir ${data_dir}/bulk_basecase \
         --model_id ${model} \
         --seed ${seed} \
         --base_case
         
     python open_to_closed_vllm.py \
-        --input_path ${output_dir}/bulk_basecase \
+        --input_dir ${data_dir}/bulk_basecase \
+        --output_dir ${data_dir}/bulk_basecase_converted \
         --model_id ${model}
 done
+
+# Consolidate all of the data
+python consolidate_data.py \
+    --input_dir ${data_dir}/bulk_converted
+    --output_dir ${data_dir}/bulk_consolidated
+
+python consolidate_data.py \
+    --input_dir ${data_dir}/bulk_basecase_converted
+    --output_dir ${data_dir}/bulk_basecase_consolidated
 
 cd ${base_dir}
