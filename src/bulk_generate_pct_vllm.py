@@ -122,6 +122,7 @@ if __name__ == '__main__':
 
         samples = []
         option_list = []
+        prompt_options = []
         for instruction in instructions:
             for j,proposition in enumerate(propositions):
                 prompt, options = fill_prompt_base_case(proposition=proposition, model=model_id, instruction=instruction)
@@ -132,6 +133,9 @@ if __name__ == '__main__':
                     continue
                 samples.append(prompt)
                 option_list.append({})
+                prompt_options.append({
+                    'instruction': instruction
+                })
     else:
         # Load and go through the positions
         with open(args.pct_questions_file) as f:
@@ -149,6 +153,7 @@ if __name__ == '__main__':
 
         samples = []
         option_list = []
+        prompt_options = []
         for i,prompt_fields in enumerate(tqdm(prompts)):
             for j,proposition in enumerate(propositions):
                 prompt, options = fill_prompt(proposition=proposition, model=model_id, **prompt_fields)
@@ -159,13 +164,14 @@ if __name__ == '__main__':
                     continue
                 samples.append(prompt)
                 option_list.append(options)
+                prompt_options.append(prompt_fields)
 
     
     
     llm_answers = []
     selection_matrix = []
     finished_prompts = []
-    for out,prompt,options in zip(model.generate(samples, sampling_params), samples, option_list):
+    for out,prompt,options,prompt_fields in zip(model.generate(samples, sampling_params), samples, option_list, prompt_options):
 
 
         # Get text
