@@ -295,11 +295,11 @@ NW_RGX = re.compile(r'\S')
 
 def fix_escape_quotes_basic(sample):
     regex = r'(?<="response": ").*(?=" })'
-    srch = re.search(regex, sample['plain_text_output'], flags=re.S)
+    srch = re.search(regex, sample, flags=re.S)
     if srch:
         orig = srch.group()
         orig = re.sub(r'(?<!\\)"', '\\"', orig)
-        sample['plain_text_output'] = re.sub(regex, orig, sample['plain_text_output'], flags=re.S)
+        sample = re.sub(regex, orig, sample, flags=re.S)
     return sample
 
 
